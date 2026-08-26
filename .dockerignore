@@ -1,0 +1,12 @@
+.git
+.github
+.vscode
+.idea
+*.har
+*.log
+.env
+.env.*
+!.env.example
+dist
+bin
+coverage.out
