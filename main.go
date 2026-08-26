@@ -102,8 +102,8 @@ func main() {
 	// Register all tools.
 	tools.RegisterLoginTool(s, deps)
 	tools.RegisterProductTools(s, deps)
-	tools.RegisterOrderTools(s, deps)
-	tools.RegisterBasketTools(s, deps)
+	tools.RegisterOrderToolsCurrent(s, deps)
+	tools.RegisterBasketToolsCurrent(s, deps)
 	tools.RegisterMemberTools(s, deps)
 	tools.RegisterInfoTool(s, deps)
 
