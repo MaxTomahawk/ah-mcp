@@ -72,9 +72,11 @@ type basketState struct {
 }
 
 type basketMutationItem struct {
-	ID          int     `json:"id,omitempty"`
-	Quantity    int     `json:"quantity"`
-	Description *string `json:"description,omitempty"`
+	ID                int     `json:"id,omitempty"`
+	Quantity          int     `json:"quantity"`
+	Description       *string `json:"description,omitempty"`
+	IsStrikethrough   *bool   `json:"isStrikethrough,omitempty"`
+	NewPosition       *int    `json:"newPosition,omitempty"`
 }
 
 type basketMutationResult struct {
