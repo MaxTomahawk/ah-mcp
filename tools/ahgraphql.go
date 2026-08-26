@@ -3,7 +3,6 @@ package tools
 import (
 	"context"
 	"fmt"
-	"sort"
 	"strings"
 )
 
@@ -29,14 +28,14 @@ type basketProduct struct {
 }
 
 type basketItem struct {
-	ID              int           `json:"id"`
-	Quantity        int           `json:"quantity"`
-	AllocatedQuantity int         `json:"allocatedQuantity,omitempty"`
-	OriginCode      string        `json:"originCode,omitempty"`
-	Position        int           `json:"position,omitempty"`
-	IsStrikethrough bool          `json:"isStrikethrough,omitempty"`
-	IsClosed        bool          `json:"isClosed,omitempty"`
-	Product         basketProduct `json:"product"`
+	ID                int           `json:"id"`
+	Quantity          int           `json:"quantity"`
+	AllocatedQuantity int           `json:"allocatedQuantity,omitempty"`
+	OriginCode        string        `json:"originCode,omitempty"`
+	Position          int           `json:"position,omitempty"`
+	IsStrikethrough   bool          `json:"isStrikethrough,omitempty"`
+	IsClosed          bool          `json:"isClosed,omitempty"`
+	Product           basketProduct `json:"product"`
 }
 
 type basketNote struct {
@@ -64,13 +63,12 @@ type basketSummary struct {
 }
 
 type basketState struct {
-	ID             string       `json:"id"`
-	ItemsInOrder   []basketItem `json:"itemsInOrder"`
-	ItemsInList    []basketItem `json:"itemsInList"`
-	ExternalItems  []basketItem `json:"externalItems"`
-	Notes          []basketNote `json:"notes"`
-	Summary        basketSummary `json:"summary"`
-	CanChangeDelivery bool      `json:"canChangeDelivery"`
+	ID                string        `json:"id"`
+	ItemsInOrder      []basketItem  `json:"itemsInOrder"`
+	ItemsInList       []basketItem  `json:"itemsInList"`
+	Notes             []basketNote  `json:"notes"`
+	Summary           basketSummary `json:"summary"`
+	CanChangeDelivery bool          `json:"canChangeDelivery"`
 }
 
 type basketMutationItem struct {
@@ -104,25 +102,13 @@ type favoriteProductMutation struct {
 	Quantity  int `json:"quantity"`
 }
 
+// basketFields intentionally contains only fields present in the authenticated
+// api.ah.nl GraphQL schema. The public website currently exposes a few extra
+// fields (for example externalItems) which are not requested here.
 const basketFields = `
     id
     canChangeDelivery
     itemsInList {
-      id
-      quantity
-      originCode
-      position
-      isStrikethrough
-      product {
-        id
-        title
-        priceV2 {
-          now { amount }
-          was { amount }
-        }
-      }
-    }
-    externalItems {
       id
       quantity
       originCode
@@ -322,13 +308,12 @@ func favoriteItemIDsForProducts(list favoriteList, productIDs []int) []string {
 		}
 	}
 	ids := make([]string, 0, len(wanted))
+	// Iterate AH's list order. The API requires item UUIDs, not product IDs.
 	for _, item := range list.Items {
 		if _, ok := wanted[item.ProductID]; ok && item.ID != "" {
 			ids = append(ids, item.ID)
 		}
 	}
-	// Keep deterministic output even if AH changes list ordering between calls.
-	sort.Strings(ids)
 	return ids
 }
 
