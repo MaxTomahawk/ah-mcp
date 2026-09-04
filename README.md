@@ -94,7 +94,7 @@ For a remote deployment, call `ah_login`; it returns a browser URL. Complete the
 
 ## Available tools
 
-The server exposes 37 tools.
+The server exposes 39 tools.
 
 ### Account/system
 
@@ -111,10 +111,16 @@ The server exposes 37 tools.
 - `ah_get_product`
 - `ah_get_products_bulk`
 - `ah_get_frequent_items`
-- `ah_get_bonus_offers`
-- `ah_get_bonus_group_products`
+- `ah_get_bonus_offers` — current national Bonus offers
+- `ah_get_bonus_offers_next_week` — explicitly published next-week national Bonus period
+- `ah_get_bonus_box` — current personal/account-bound Bonus Box offers
+- `ah_get_bonus_group_products` — group drill-down; accepts optional `valid_from`/`valid_until` for future periods
 - `ah_search_stores`
 - `ah_get_last_chance_items`
+
+### Bonus period semantics
+
+`ah_get_bonus_offers` remains the current/active national Bonus tool. `ah_get_bonus_offers_next_week` selects the first future period published by AH metadata and returns its `valid_from`/`valid_until`; it never falls back to current-week data. `ah_get_bonus_box` is personal to the logged-in account and returns the current Bonus Box period with AH's activation state. It is read-only: this server does not expose an unverified Bonus Box activation mutation.
 
 ### Shopping list and favourites
 
